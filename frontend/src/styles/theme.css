@@ -1,0 +1,75 @@
+/* =========================
+   Light Theme
+========================= */
+
+:root {
+  /* 배경 */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-hover: #eff6ff;
+
+  /* 텍스트 */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-label: #334155;
+
+  /* 테두리 */
+  --border-color: #cbd5e1;
+
+  /* 브랜드 색상 */
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+
+  /* 보조 버튼 */
+  --btn-secondary-bg: #eff6ff;
+  --btn-secondary-text: #2563eb;
+  --btn-secondary-border: #bfdbfe;
+
+  /* 상태 */
+  --error-color: #dc2626;
+  --success-color: #16a34a;
+
+  /* 그림자 */
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+
+  color-scheme: light;
+}
+
+/* =========================
+   Dark Theme
+========================= */
+
+:root[data-theme='dark'] {
+  /* 배경 */
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --bg-hover: #334155;
+
+  /* 텍스트 */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-label: #e2e8f0;
+
+  /* 테두리 */
+  --border-color: #475569;
+
+  /* 브랜드 색상 */
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+
+  /* 보조 버튼 */
+  --btn-secondary-bg: #1e3a5f;
+  --btn-secondary-text: #93c5fd;
+  --btn-secondary-border: #3b82f6;
+
+  /* 상태 */
+  --error-color: #f87171;
+  --success-color: #4ade80;
+
+  /* 그림자 */
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  color-scheme: dark;
+}

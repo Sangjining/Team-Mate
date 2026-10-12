@@ -1,0 +1,270 @@
+/* 대시보드 전체 */
+.dashboard {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  color: var(--text-primary);
+}
+
+/* 페이지 제목 */
+.pageHeader {
+  margin-bottom: 32px;
+}
+
+.pageHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--text-primary);
+}
+
+.pageHeader p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* 요약 카드 */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.summaryCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 24px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+}
+
+.summaryInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryTitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.summaryValue {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.summaryIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 48px;
+  height: 48px;
+
+  background-color: var(--btn-secondary-bg);
+  border-radius: 12px;
+  font-size: 24px;
+}
+
+/* 하단 콘텐츠 */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+.contentCard {
+  min-width: 0;
+  padding: 24px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+}
+
+/* 카드 제목 */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cardHeader h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.moreText {
+  font-size: 13px;
+  color: var(--accent-color);
+  cursor: pointer;
+}
+
+/* 최근 업무 */
+.taskList {
+  display: flex;
+  flex-direction: column;
+}
+
+.taskItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.taskItem:last-child {
+  border-bottom: none;
+}
+
+.taskInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.taskInfo strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.taskInfo span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* 업무 상태 */
+.statusBadge {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.todo {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.inProgress {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.done {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* 팀 목록 */
+.teamList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.teamItem {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.teamItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.teamInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.teamInfo strong {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.teamInfo span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* 진행률 */
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.progressHeader strong {
+  color: var(--accent-color);
+}
+
+.progressTrack {
+  width: 100%;
+  height: 8px;
+  background-color: var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* 태블릿 */
+@media (max-width: 1100px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summaryCard {
+    padding: 18px;
+  }
+
+  .contentCard {
+    padding: 18px;
+  }
+
+  .pageHeader h1 {
+    font-size: 24px;
+  }
+
+  .taskItem {
+    align-items: flex-start;
+  }
+}
