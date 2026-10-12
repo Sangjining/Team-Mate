@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.teammate.backend.auth.dto.LoginResponse;
 import com.teammate.backend.auth.dto.EmailVerificationRequest;
 import com.teammate.backend.auth.dto.VerifyEmailRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,7 +22,7 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody SignUpRequest request) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest request) {
 
         authService.signUp(request);
 

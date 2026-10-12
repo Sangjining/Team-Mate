@@ -29,9 +29,10 @@ public class Task {
     @Column(length = 1000)
     private String description;
 
+    // 칸반 보드 업무 상태 (기본값: 업무 대기)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Status status = Status.TODO;
+    private Status status = Status.BACKLOG;
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
@@ -42,10 +43,14 @@ public class Task {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    // 칸반 보드 6단계
     public enum Status {
-        TODO,
-        IN_PROGRESS,
-        DONE
+        BACKLOG,       // 업무 대기
+        BLOCKED,       // 보류
+        IN_PROGRESS,   // 진행 중
+        REVIEW,        // 검토 중
+        TESTING,       // 테스트 중
+        DONE           // 완료
     }
 
     @PrePersist

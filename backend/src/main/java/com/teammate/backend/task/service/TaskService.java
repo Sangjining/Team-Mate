@@ -1,7 +1,10 @@
 package com.teammate.backend.task.service;
 
 import com.teammate.backend.task.dto.CreateTaskRequest;
+import com.teammate.backend.task.dto.TaskProgressResponse;
 import com.teammate.backend.task.dto.TaskResponse;
+import com.teammate.backend.task.dto.UpdateTaskRequest;
+import com.teammate.backend.task.dto.UpdateTaskStatusRequest;
 import com.teammate.backend.task.entity.Task;
 import com.teammate.backend.task.repository.TaskRepository;
 import com.teammate.backend.team.entity.Team;
@@ -9,11 +12,9 @@ import com.teammate.backend.team.repository.TeamMemberRepository;
 import com.teammate.backend.team.repository.TeamRepository;
 import com.teammate.backend.user.entity.User;
 import com.teammate.backend.user.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.teammate.backend.task.dto.UpdateTaskStatusRequest;
-import com.teammate.backend.task.dto.UpdateTaskRequest;
-import com.teammate.backend.task.dto.TaskProgressResponse;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
+    // 업무 생성
     @Transactional
     public TaskResponse createTask(
             Long teamId,
@@ -69,6 +71,8 @@ public class TaskService {
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
 
+        // 기본 상태는 Task 엔티티의 BACKLOG 사용
+
         if (request.getAssigneeId() != null) {
             User assignee = userRepository.findById(request.getAssigneeId())
                     .orElseThrow(() ->
@@ -94,6 +98,7 @@ public class TaskService {
         return new TaskResponse(savedTask);
     }
 
+    // 팀 업무 목록 조회
     @Transactional(readOnly = true)
     public List<TaskResponse> getTasks(
             Long teamId,
@@ -120,6 +125,8 @@ public class TaskService {
                 .map(TaskResponse::new)
                 .toList();
     }
+
+    // 업무 상태 변경 (칸반 보드)
     @Transactional
     public TaskResponse updateTaskStatus(
             Long teamId,
@@ -153,10 +160,20 @@ public class TaskService {
             );
         }
 
+        // 상태값 검증
+        if (request.getStatus() == null) {
+            throw new IllegalArgumentException(
+                    "변경할 업무 상태를 입력해주세요."
+            );
+        }
+
+        // 칸반 보드 6단계 상태 변경
         task.setStatus(request.getStatus());
 
         return new TaskResponse(task);
     }
+
+    // 업무 정보 수정
     @Transactional
     public TaskResponse updateTask(
             Long teamId,
@@ -218,6 +235,8 @@ public class TaskService {
 
         return new TaskResponse(task);
     }
+
+    // 업무 삭제
     @Transactional
     public void deleteTask(
             Long teamId,
@@ -252,6 +271,8 @@ public class TaskService {
 
         taskRepository.delete(task);
     }
+
+    // 팀 전체 진행률 조회
     @Transactional(readOnly = true)
     public TaskProgressResponse getTaskProgress(
             Long teamId,
