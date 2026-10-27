@@ -1,0 +1,251 @@
+.overview {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--text-primary);
+}
+
+.heading h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+
+.heading p,
+.subtext {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.statCard,
+.panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.statCard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.statCard>span {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.statCard strong {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.statCard small {
+    margin-left: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.panelTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.panelTitle h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.panelTitle>strong {
+    font-size: 22px;
+    color: var(--accent-color);
+}
+
+.progressTrack,
+.statusTrack {
+    overflow: hidden;
+    background: var(--bg-hover, #e2e8f0);
+    border-radius: 99px;
+}
+
+.progressTrack {
+    height: 12px;
+    margin-bottom: 12px;
+}
+
+.progressFill,
+.statusFill {
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: inherit;
+    transition: width .25s ease;
+}
+
+.statusGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 28px;
+}
+
+.statusLine {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 9px;
+    font-size: 13px;
+}
+
+.statusLine span {
+    color: var(--text-secondary);
+}
+
+.statusTrack {
+    height: 7px;
+}
+
+.deadlineList {
+    display: flex;
+    flex-direction: column;
+}
+
+.deadlineItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.deadlineInfo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 5px;
+}
+
+.deadlineTitle {
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.deadlineInfo small {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.deadlineBadge {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.urgent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.soon {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.upcoming {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.empty {
+    margin: 0;
+    padding: 8px 0 14px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.viewTasks {
+    display: block;
+    margin: 20px 0 0 auto;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.viewTasks:hover {
+    background: var(--bg-hover);
+}
+
+.state {
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+    .stats {
+        gap: 8px;
+    }
+
+    .statCard,
+    .panel {
+        padding: 16px;
+    }
+
+    .statCard strong {
+        font-size: 23px;
+    }
+
+    .statusGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 대기 업무를 개요 상단에서 바로 확인할 수 있도록 강조 */
+.pendingStat {
+    border-color: var(--accent-color);
+}
+
+.pendingStat strong {
+    color: var(--accent-color);
+}
+
+.pendingPanel {
+    border-left: 4px solid var(--accent-color);
+}
+
+.pendingCount {
+    font-size: 13px;
+    color: var(--accent-color);
+    font-weight: 700;
+    margin-left: 6px;
+}
+
+.pendingBadge {
+    background: var(--bg-hover, #e2e8f0);
+    color: var(--text-secondary);
+}
+
+@media (max-width: 800px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

@@ -1,120 +1,145 @@
-/* 대시보드 전체 */
 .dashboard {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  color: var(--text-primary);
+  color: var(--text-primary)
 }
 
-/* 페이지 제목 */
 .pageHeader {
-  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px
 }
 
 .pageHeader h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 10px;
-  color: var(--text-primary);
+  font-size: 30px;
+  margin: 7px 0 8px;
+  letter-spacing: -.7px
 }
 
 .pageHeader p {
   font-size: 14px;
   color: var(--text-secondary);
-  margin: 0;
+  margin: 0
 }
 
-/* 요약 카드 */
+.eyebrow,
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: var(--accent-color)
+}
+
+.primaryButton {
+  background: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap
+}
+
+.primaryButton:hover {
+  background: var(--accent-hover)
+}
+
 .summaryGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
-  margin-bottom: 28px;
+  gap: 18px;
+  margin-bottom: 22px
 }
 
 .summaryCard {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  gap: 10px;
   padding: 24px;
-  background-color: var(--bg-card);
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 14px;
-  box-shadow: var(--card-shadow);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow)
 }
 
 .summaryInfo {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 12px
 }
 
 .summaryTitle {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-secondary)
 }
 
 .summaryValue {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
-  color: var(--text-primary);
+  line-height: 1
 }
 
 .summaryIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 48px;
-  height: 48px;
-
-  background-color: var(--btn-secondary-bg);
-  border-radius: 12px;
-  font-size: 24px;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: var(--btn-secondary-bg);
+  font-size: 24px
 }
 
-/* 하단 콘텐츠 */
 .contentGrid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 22px
 }
 
 .contentCard {
   min-width: 0;
-  padding: 24px;
-  background-color: var(--bg-card);
+  padding: 26px;
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 14px;
-  box-shadow: var(--card-shadow);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow)
 }
 
-/* 카드 제목 */
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 18px
 }
 
 .cardHeader h2 {
   font-size: 18px;
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-primary);
+  margin: 5px 0 0
 }
 
 .moreText {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--accent-color);
-  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 700
 }
 
-/* 최근 업무 */
-.taskList {
+.moreText:hover {
+  text-decoration: underline
+}
+
+.taskList,
+.teamList,
+.scheduleList {
   display: flex;
-  flex-direction: column;
+  flex-direction: column
 }
 
 .taskItem {
@@ -122,149 +147,253 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-
-  padding: 18px 0;
+  padding: 17px 0;
   border-bottom: 1px solid var(--border-color);
+  text-decoration: none;
+  color: inherit
 }
 
-.taskItem:last-child {
-  border-bottom: none;
+.taskItem:last-child,
+.teamItem:last-child,
+.scheduleItem:last-child {
+  border-bottom: 0
 }
 
-.taskInfo {
+.taskItem:hover,
+.scheduleItem:hover {
+  background: var(--bg-hover)
+}
+
+.taskInfo,
+.teamInfo,
+.scheduleInfo {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  min-width: 0;
+  min-width: 0
 }
 
-.taskInfo strong {
+.taskInfo strong,
+.scheduleInfo strong {
   font-size: 14px;
-  color: var(--text-primary);
+  overflow-wrap: anywhere
 }
 
-.taskInfo span {
+.taskInfo span,
+.teamInfo span,
+.scheduleInfo span {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-secondary)
 }
 
-/* 업무 상태 */
 .statusBadge {
   flex-shrink: 0;
+  border-radius: 999px;
   padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700
 }
 
-.todo {
-  background-color: #e2e8f0;
-  color: #475569;
+.neutral {
+  background: var(--bg-hover);
+  color: var(--text-secondary)
 }
 
-.inProgress {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+.blue {
+  background: #dbeafe;
+  color: #1d4ed8
 }
 
-.done {
-  background-color: #dcfce7;
-  color: #15803d;
+.green {
+  background: #dcfce7;
+  color: #15803d
 }
 
-/* 팀 목록 */
-.teamList {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.warning {
+  background: #fef3c7;
+  color: #92400e
+}
+
+.purple {
+  background: #ede9fe;
+  color: #6d28d9
 }
 
 .teamItem {
-  padding-bottom: 20px;
+  display: block;
+  padding: 16px 0 20px;
   border-bottom: 1px solid var(--border-color);
-}
-
-.teamItem:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+  text-decoration: none;
+  color: inherit
 }
 
 .teamInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 14px
 }
 
 .teamInfo strong {
-  font-size: 15px;
-  color: var(--text-primary);
+  font-size: 14px
 }
 
-.teamInfo span {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* 진행률 */
 .progressHeader {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-secondary)
 }
 
 .progressHeader strong {
-  color: var(--accent-color);
+  color: var(--accent-color)
 }
 
 .progressTrack {
-  width: 100%;
   height: 8px;
-  background-color: var(--border-color);
-  border-radius: 10px;
-  overflow: hidden;
+  background: var(--bg-hover);
+  border-radius: 20px;
+  overflow: hidden
 }
 
 .progressBar {
   height: 100%;
-  background-color: var(--accent-color);
-  border-radius: 10px;
-  transition: width 0.3s ease;
+  background: var(--accent-color);
+  border-radius: 20px;
+  transition: width .3s
 }
 
-/* 태블릿 */
-@media (max-width: 1100px) {
+.scheduleCard {
+  margin-top: 22px
+}
+
+.scheduleItem {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border-color);
+  color: inherit;
+  text-decoration: none
+}
+
+.datePill {
+  min-width: 94px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center
+}
+
+.scheduleInfo {
+  flex: 1
+}
+
+.scheduleArrow {
+  color: var(--text-secondary)
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding: 20px 0
+}
+
+.empty a {
+  color: var(--accent-color)
+}
+
+.notice,
+.error {
+  padding: 16px 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  background: var(--bg-hover);
+  color: var(--text-secondary)
+}
+
+.error {
+  background: #fff1f2;
+  color: #be123c
+}
+
+@media(max-width:1100px) {
   .summaryGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr))
   }
 
   .contentGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr
   }
 }
 
-/* 모바일 */
-@media (max-width: 600px) {
-  .summaryGrid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .summaryCard {
-    padding: 18px;
-  }
-
-  .contentCard {
-    padding: 18px;
+@media(max-width:600px) {
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column
   }
 
   .pageHeader h1 {
-    font-size: 24px;
+    font-size: 25px
   }
 
-  .taskItem {
-    align-items: flex-start;
+  .summaryGrid {
+    gap: 12px
   }
+
+  .summaryCard {
+    padding: 18px
+  }
+
+  .contentCard {
+    padding: 18px
+  }
+
+  .summaryIcon {
+    width: 42px;
+    height: 42px;
+    font-size: 20px
+  }
+
+  .summaryValue {
+    font-size: 27px
+  }
+
+  .scheduleItem {
+    gap: 10px
+  }
+
+  .datePill {
+    min-width: 80px;
+    padding: 9px 6px
+  }
+}
+
+.taskMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.teamBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.taskDueDate {
+  color: var(--text-secondary);
+  font-size: 12px;
 }

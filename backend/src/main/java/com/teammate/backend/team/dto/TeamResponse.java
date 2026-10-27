@@ -11,12 +11,19 @@ public class TeamResponse {
     private Team.Status status;
     private LocalDateTime createdAt;
 
+    // 최초 팀 생성자의 사용자 ID
+    private Long createdByUserId;
+
     public TeamResponse(Team team) {
         this.teamId = team.getTeamId();
         this.name = team.getName();
         this.description = team.getDescription();
         this.status = team.getStatus();
         this.createdAt = team.getCreatedAt();
+
+        this.createdByUserId = team.getCreatedBy() != null
+                ? team.getCreatedBy().getUserId()
+                : null;
     }
 
     public Long getTeamId() {
@@ -37,5 +44,9 @@ public class TeamResponse {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Long getCreatedByUserId() {
+        return createdByUserId;
     }
 }

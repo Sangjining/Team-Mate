@@ -43,6 +43,7 @@ public class TeamService {
         Team team = new Team();
         team.setName(request.getName());
         team.setDescription(request.getDescription());
+        team.setCreatedBy(user); // 최초 생성자는 변경하지 않음
 
         Team savedTeam = teamRepository.save(team);
 
@@ -198,6 +199,53 @@ public class TeamService {
         // 팀원 삭제
         teamMemberRepository.delete(targetMember);
     }
+    // OWNER가 팀원의 역할을 변경합니다. 최초 생성자와 자기 자신은 강등할 수 없습니다.
+    @Transactional
+    public TeamMemberResponse updateTeamMemberRole(
+            Long teamId,
+            Long targetUserId,
+            TeamMember.TeamRole newRole,
+            String loginId
+    ) {
+        if (newRole == null) {
+            throw new IllegalArgumentException("변경할 역할을 입력해주세요.");
+        }
+
+        User requester = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        boolean isOwner = teamMemberRepository.existsByTeamTeamIdAndUserUserIdAndRole(
+                teamId, requester.getUserId(), TeamMember.TeamRole.OWNER
+        );
+        if (!isOwner) {
+            throw new IllegalArgumentException("팀원 권한 변경 권한이 없습니다.");
+        }
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("팀을 찾을 수 없습니다."));
+
+        // 이전에 만든 팀은 created_by가 비어 있을 수 있으므로 안전하게 변경을 차단합니다.
+        if (team.getCreatedBy() == null) {
+            throw new IllegalStateException("팀 최초 생성자 정보가 없습니다. 기존 팀 데이터를 먼저 보정해주세요.");
+        }
+
+        TeamMember target = teamMemberRepository
+                .findByTeamTeamIdAndUserUserId(teamId, targetUserId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 팀원을 찾을 수 없습니다."));
+
+        if (newRole == TeamMember.TeamRole.MEMBER) {
+            if (team.getCreatedBy().getUserId().equals(targetUserId)) {
+                throw new IllegalArgumentException("최초 팀 생성자는 강등할 수 없습니다.");
+            }
+            if (requester.getUserId().equals(targetUserId)) {
+                throw new IllegalArgumentException("자신의 OWNER 권한은 회수할 수 없습니다.");
+            }
+        }
+
+        target.setRole(newRole);
+        return new TeamMemberResponse(target);
+    }
+
     @Transactional
     public TeamResponse updateTeam(
             Long teamId,

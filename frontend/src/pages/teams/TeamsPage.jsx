@@ -40,7 +40,39 @@ function TeamsPage() {
     setPageError('');
     try {
       const result = await teamRequest('GET');
-      setTeams(Array.isArray(result) ? result : []);
+      const teamList = Array.isArray(result) ? result : [];
+
+      // 팀 목록 응답에는 팀원 수와 진행률이 없을 수 있어 별도로 조회합니다.
+      const enrichedTeams = await Promise.all(
+        teamList.map(async (team) => {
+          const [membersResult, progressResult] = await Promise.allSettled([
+            teamRequest('GET', `/${team.teamId}/members`),
+            teamRequest('GET', `/${team.teamId}/tasks/progress`),
+          ]);
+
+          const memberCount = membersResult.status === 'fulfilled' && Array.isArray(membersResult.value)
+            ? membersResult.value.length
+            : (team.memberCount ?? null);
+
+          const progressData = progressResult.status === 'fulfilled' ? progressResult.value : null;
+          const rawProgress = progressData?.progress ?? team.progress;
+          const numericProgress = rawProgress == null ? null : Number(rawProgress);
+          const progress = Number.isFinite(numericProgress)
+            ? Math.min(100, Math.max(0, numericProgress))
+            : null;
+
+          if (membersResult.status === 'rejected' || progressResult.status === 'rejected') {
+            console.warn(`팀 ${team.teamId}의 일부 통계 조회에 실패했습니다.`, {
+              members: membersResult.status === 'rejected' ? membersResult.reason : null,
+              progress: progressResult.status === 'rejected' ? progressResult.reason : null,
+            });
+          }
+
+          return { ...team, memberCount, progress };
+        })
+      );
+
+      setTeams(enrichedTeams);
     } catch (error) {
       setPageError(error.message);
     } finally {
@@ -124,14 +156,14 @@ function TeamsPage() {
 
               <div className={styles.memberInfo}>
                 <span>👤</span>
-                <span>팀원 {team.memberCount ?? 1}명</span>
+                <span>팀원 {team.memberCount == null ? '—' : `${team.memberCount}명`}</span>
               </div>
 
               {/* 진행률 */}
               <div className={styles.progressSection}>
                 <div className={styles.progressHeader}>
                   <span>프로젝트 진행률</span>
-                  <strong>{team.progress ?? 0}%</strong>
+                  <strong>{team.progress == null ? '—' : `${Math.round(team.progress)}%`}</strong>
                 </div>
 
                 <div className={styles.progressTrack}>

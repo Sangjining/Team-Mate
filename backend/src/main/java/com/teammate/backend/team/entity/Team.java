@@ -1,5 +1,6 @@
 package com.teammate.backend.team.entity;
 
+import com.teammate.backend.user.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,6 +18,11 @@ public class Team {
 
     @Column(length = 500)
     private String description;
+
+    // 최초 팀 생성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -63,6 +69,14 @@ public class Team {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Status getStatus() {

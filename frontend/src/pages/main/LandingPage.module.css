@@ -1,0 +1,628 @@
+.page {
+    min-height: 100vh;
+    background: #fff;
+    color: #15243b;
+    font-family: inherit
+}
+
+.header {
+    height: 76px;
+    border-bottom: 1px solid #edf0f5;
+    background: rgba(255, 255, 255, .95);
+    position: relative;
+    z-index: 2
+}
+
+.headerInner {
+    max-width: 1220px;
+    height: 100%;
+    margin: auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+    color: #172b4d;
+    text-decoration: none
+}
+
+.brandIcon,
+.previewLogo {
+    display: inline-grid;
+    place-items: center;
+    background: #336bff;
+    color: white;
+    font-weight: 900;
+    border-radius: 11px;
+    width: 37px;
+    height: 37px;
+    font-size: 23px
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 22px
+}
+
+.loginLink {
+    color: #3c4c65;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px
+}
+
+.navSignup {
+    background: #346cff;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px
+}
+
+.navSignup:hover,
+.primaryButton:hover {
+    background: #2458e4
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(120deg, #f7faff 0%, #fff 58%, #f0f5ff 100%)
+}
+
+.glowOne,
+.glowTwo {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(8px)
+}
+
+.glowOne {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #e0eaff 0%, transparent 72%);
+    top: -220px;
+    left: -180px
+}
+
+.glowTwo {
+    width: 540px;
+    height: 540px;
+    background: radial-gradient(circle, #e5eeff 0%, transparent 72%);
+    right: -180px;
+    bottom: -260px
+}
+
+.heroInner {
+    max-width: 1220px;
+    min-height: 620px;
+    padding: 86px 32px 100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 60px;
+    align-items: center;
+    position: relative
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eaf1ff;
+    color: #3368d6;
+    border: 1px solid #d9e5ff;
+    border-radius: 99px;
+    padding: 9px 15px;
+    font-size: 13px;
+    font-weight: 700
+}
+
+.badgeDot {
+    width: 7px;
+    height: 7px;
+    background: #427cff;
+    border-radius: 50%
+}
+
+.heroCopy h1 {
+    font-size: clamp(36px, 4vw, 55px);
+    line-height: 1.28;
+    letter-spacing: -2.3px;
+    margin: 24px 0 20px;
+    font-weight: 850;
+    word-break: keep-all
+}
+
+.heroCopy h1 span {
+    color: #346cff
+}
+
+.heroDescription {
+    font-size: 16px;
+    line-height: 1.95;
+    color: #64748b;
+    margin: 0;
+    word-break: keep-all
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px
+}
+
+.primaryButton,
+.secondaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 15px 22px;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 750;
+    transition: background .2s, transform .2s
+}
+
+.primaryButton {
+    background: #346cff;
+    color: #fff;
+    box-shadow: 0 9px 20px #346cff26
+}
+
+.secondaryButton {
+    color: #334155;
+    background: #fff;
+    border: 1px solid #dfe6f0
+}
+
+.secondaryButton:hover {
+    background: #f4f7fc
+}
+
+.helper {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 20px;
+    line-height: 1.6
+}
+
+.previewWrap {
+    position: relative;
+    min-width: 0
+}
+
+.previewWindow {
+    background: #fff;
+    border: 1px solid #e6ebf4;
+    border-radius: 17px;
+    box-shadow: 0 25px 70px #254d9a20;
+    overflow: hidden;
+    padding: 22px;
+    transform: rotate(-1deg)
+}
+
+.previewTop {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 750;
+    font-size: 13px;
+    border-bottom: 1px solid #edf1f6;
+    padding-bottom: 18px;
+    color: #334155
+}
+
+.previewLogo {
+    width: 27px;
+    height: 27px;
+    font-size: 17px;
+    border-radius: 8px
+}
+
+.previewMore {
+    margin-left: auto;
+    color: #94a3b8;
+    letter-spacing: 2px
+}
+
+.previewTitle {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 22px 0 18px
+}
+
+.previewTag {
+    display: inline-block;
+    font-size: 10px;
+    background: #e9f2ff;
+    color: #3572db;
+    border-radius: 20px;
+    padding: 5px 9px;
+    margin-left: 8px;
+    vertical-align: middle
+}
+
+.previewProgress {
+    padding: 15px;
+    background: #f7f9fd;
+    border: 1px solid #edf1f6;
+    border-radius: 10px;
+    margin-bottom: 18px
+}
+
+.previewProgressHeader {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 10px
+}
+
+.previewProgressHeader strong {
+    color: #346cff
+}
+
+.previewTrack {
+    height: 7px;
+    background: #e6ebf4;
+    border-radius: 20px;
+    overflow: hidden
+}
+
+.previewTrack span {
+    display: block;
+    height: 100%;
+    width: 68%;
+    background: #477aff;
+    border-radius: 20px
+}
+
+.kanban {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px
+}
+
+.kanbanColumn {
+    min-width: 0;
+    background: #f6f8fc;
+    border: 1px solid #edf1f6;
+    border-radius: 10px;
+    padding: 9px
+}
+
+.kanbanHeading {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+    margin: 3px 0 12px
+}
+
+.kanbanHeading b {
+    margin-left: auto;
+    color: #94a3b8;
+    font-weight: 600
+}
+
+.grayDot,
+.blueDot,
+.greenDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #94a3b8;
+    flex: none
+}
+
+.blueDot {
+    background: #4d80ff
+}
+
+.greenDot {
+    background: #2bb78c
+}
+
+.taskCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #e8edf5;
+    border-radius: 8px;
+    padding: 11px 8px;
+    margin-bottom: 8px;
+    min-height: 90px
+}
+
+.taskCard strong {
+    font-size: 10px;
+    line-height: 1.4;
+    word-break: keep-all
+}
+
+.taskCard span {
+    font-size: 9px;
+    color: #64748b
+}
+
+.taskCard small {
+    font-size: 9px;
+    color: #8ca0ba;
+    margin-top: auto
+}
+
+.previewCaption {
+    display: block;
+    text-align: right;
+    margin: 15px 5px 0;
+    color: #94a3b8;
+    font-size: 11px
+}
+
+.features {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 95px 32px 110px
+}
+
+.sectionHeading {
+    text-align: center
+}
+
+.sectionHeading>span {
+    color: #346cff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px
+}
+
+.sectionHeading h2 {
+    font-size: 34px;
+    line-height: 1.45;
+    letter-spacing: -1.3px;
+    margin: 16px 0
+}
+
+.sectionHeading p {
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.8
+}
+
+.featureGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 48px
+}
+
+.featureCard {
+    border: 1px solid #e8edf5;
+    border-radius: 15px;
+    padding: 28px 22px;
+    background: #fff;
+    box-shadow: 0 6px 20px #122e6206
+}
+
+.featureIcon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    background: #eaf1ff;
+    color: #346cff;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 24px
+}
+
+.featureCard h3 {
+    font-size: 17px;
+    letter-spacing: -.5px;
+    margin: 0 0 12px
+}
+
+.featureCard p {
+    font-size: 13px;
+    line-height: 1.85;
+    color: #64748b;
+    margin: 0;
+    word-break: keep-all
+}
+
+.cta {
+    background: #f0f5ff;
+    padding: 75px 24px;
+    text-align: center
+}
+
+.ctaInner h2 {
+    font-size: 30px;
+    letter-spacing: -1px;
+    margin: 0 0 12px
+}
+
+.ctaInner p {
+    color: #64748b;
+    margin: 0 0 27px;
+    font-size: 15px
+}
+
+.ctaButton {
+    display: inline-flex;
+    background: #346cff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 14px 25px;
+    font-weight: 750
+}
+
+.ctaButton:hover {
+    background: #2458e4
+}
+
+.footer {
+    max-width: 1220px;
+    margin: auto;
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: #94a3b8;
+    font-size: 12px
+}
+
+.footer span:first-child {
+    color: #52647f;
+    font-weight: 800;
+    font-size: 15px
+}
+
+@media(max-width:960px) {
+    .heroInner {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        padding-top: 70px
+    }
+
+    .heroCopy {
+        text-align: center
+    }
+
+    .actions {
+        justify-content: center
+    }
+
+    .previewWrap {
+        max-width: 620px;
+        width: 100%;
+        margin: auto
+    }
+
+    .featureGrid {
+        grid-template-columns: repeat(2, 1fr)
+    }
+}
+
+@media(max-width:540px) {
+    .header {
+        height: 66px
+    }
+
+    .headerInner {
+        padding: 0 18px
+    }
+
+    .brand {
+        font-size: 19px
+    }
+
+    .brandIcon {
+        width: 31px;
+        height: 31px;
+        font-size: 19px
+    }
+
+    .nav {
+        gap: 12px
+    }
+
+    .navSignup {
+        padding: 10px 12px;
+        font-size: 12px
+    }
+
+    .loginLink {
+        font-size: 12px
+    }
+
+    .heroInner {
+        padding: 60px 18px 70px
+    }
+
+    .heroCopy h1 {
+        font-size: 35px;
+        letter-spacing: -1.5px
+    }
+
+    .heroDescription {
+        font-size: 14px
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch
+    }
+
+    .previewWindow {
+        padding: 13px
+    }
+
+    .kanban {
+        gap: 5px
+    }
+
+    .kanbanColumn {
+        padding: 5px
+    }
+
+    .kanbanHeading {
+        font-size: 8px
+    }
+
+    .taskCard {
+        padding: 7px 5px
+    }
+
+    .taskCard strong {
+        font-size: 9px
+    }
+
+    .features {
+        padding: 65px 18px
+    }
+
+    .sectionHeading h2 {
+        font-size: 27px
+    }
+
+    .featureGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 30px
+    }
+
+    .featureCard {
+        padding: 23px
+    }
+
+    .ctaInner h2 {
+        font-size: 25px
+    }
+
+    .footer {
+        padding: 25px 18px;
+        flex-direction: column
+    }
+}

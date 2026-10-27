@@ -27,4 +27,12 @@ public class EmailService {
 
         mailSender.send(message);
     }
+    public void sendPasswordChangeCode(String email, String code) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("[Team-Mate] 비밀번호 변경 인증번호");
+        message.setText("Team-Mate 비밀번호 변경 인증번호입니다.\n\n인증번호: " + code
+                + "\n\n인증번호는 5분 동안 유효합니다. 요청하지 않았다면 무시해 주세요.");
+        mailSender.send(message);
+    }
 }

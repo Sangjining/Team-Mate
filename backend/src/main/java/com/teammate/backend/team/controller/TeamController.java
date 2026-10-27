@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.teammate.backend.team.dto.TeamMemberResponse;
 import com.teammate.backend.team.dto.AddTeamMemberRequest;
 import com.teammate.backend.team.dto.UpdateTeamRequest;
+import com.teammate.backend.team.dto.UpdateTeamMemberRoleRequest;
 import java.util.List;
 
 @RestController
@@ -95,6 +96,19 @@ public class TeamController {
 
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{teamId}/members/{userId}/role")
+    public ResponseEntity<TeamMemberResponse> updateTeamMemberRole(
+            @PathVariable Long teamId,
+            @PathVariable Long userId,
+            @Valid @RequestBody UpdateTeamMemberRoleRequest request,
+            Authentication authentication
+    ) {
+        TeamMemberResponse response = teamService.updateTeamMemberRole(
+                teamId, userId, request.getRole(), authentication.getName()
+        );
+        return ResponseEntity.ok(response);
+    }
+
     @PatchMapping("/{teamId}")
     public ResponseEntity<TeamResponse> updateTeam(
             @PathVariable Long teamId,

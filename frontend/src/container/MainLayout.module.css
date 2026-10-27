@@ -192,3 +192,15 @@
     padding: 16px;
   }
 }
+/* 프로필 영역을 마이페이지 이동 버튼으로 사용 */
+.profile {
+  border: 0;
+  background: transparent;
+  padding: 5px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.profile:hover, .profile:focus-visible {
+  background: var(--bg-hover);
+}
