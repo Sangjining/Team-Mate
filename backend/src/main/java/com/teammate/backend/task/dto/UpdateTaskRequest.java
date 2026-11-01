@@ -1,5 +1,6 @@
 package com.teammate.backend.task.dto;
 
+import com.teammate.backend.task.entity.Task.Priority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +19,9 @@ public class UpdateTaskRequest {
 
     private LocalDateTime dueDate;
 
+    // 기존 클라이언트가 생략하면 현재 우선순위 유지
+    private Priority priority;
+
     public String getTitle() {
         return title;
     }
@@ -28,6 +32,10 @@ public class UpdateTaskRequest {
 
     public Long getAssigneeId() {
         return assigneeId;
+    }
+
+    public Priority getPriority() {
+        return priority;
     }
 
     public LocalDateTime getDueDate() {

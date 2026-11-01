@@ -10,9 +10,12 @@ public class TaskResponse {
     private Long teamId;
     private Long assigneeId;
     private String assigneeName;
+    private Long createdById;
+    private String createdByName;
     private String title;
     private String description;
     private Task.Status status;
+    private Task.Priority priority;
     private LocalDateTime dueDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -26,9 +29,15 @@ public class TaskResponse {
             this.assigneeName = task.getAssignee().getName();
         }
 
+        if (task.getCreatedBy() != null) {
+            this.createdById = task.getCreatedBy().getUserId();
+            this.createdByName = task.getCreatedBy().getName();
+        }
+
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.status = task.getStatus();
+        this.priority = task.getPriority();
         this.dueDate = task.getDueDate();
         this.createdAt = task.getCreatedAt();
         this.updatedAt = task.getUpdatedAt();
@@ -50,12 +59,24 @@ public class TaskResponse {
         return assigneeName;
     }
 
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public String getCreatedByName() {
+        return createdByName;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public Task.Priority getPriority() {
+        return priority;
     }
 
     public Task.Status getStatus() {

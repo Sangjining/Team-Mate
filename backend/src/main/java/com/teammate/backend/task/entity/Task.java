@@ -23,6 +23,11 @@ public class Task {
     @JoinColumn(name = "assignee_id")
     private User assignee;
 
+    // 업무 생성자. 기존 데이터에는 생성자가 기록되지 않았으므로 nullable로 유지합니다.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
     @Column(nullable = false, length = 100)
     private String title;
 
@@ -33,6 +38,11 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Status status = Status.BACKLOG;
+
+    // 업무 우선순위 (기본값: 보통)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Priority priority = Priority.MEDIUM;
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
@@ -51,6 +61,12 @@ public class Task {
         REVIEW,        // 검토 중
         TESTING,       // 테스트 중
         DONE           // 완료
+    }
+
+    public enum Priority {
+        LOW,
+        MEDIUM,
+        HIGH
     }
 
     @PrePersist
@@ -77,6 +93,10 @@ public class Task {
         return assignee;
     }
 
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -87,6 +107,10 @@ public class Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    public Priority getPriority() {
+        return priority;
     }
 
     public LocalDateTime getDueDate() {
@@ -109,6 +133,10 @@ public class Task {
         this.assignee = assignee;
     }
 
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -119,6 +147,10 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority == null ? Priority.MEDIUM : priority;
     }
 
     public void setDueDate(LocalDateTime dueDate) {

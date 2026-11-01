@@ -6,6 +6,10 @@ import com.teammate.backend.task.dto.TaskResponse;
 import com.teammate.backend.task.dto.UpdateTaskRequest;
 import com.teammate.backend.task.dto.UpdateTaskStatusRequest;
 import com.teammate.backend.task.entity.Task;
+import com.teammate.backend.task.entity.TaskAssignment;
+import com.teammate.backend.task.repository.TaskAssignmentRepository;
+import com.teammate.backend.team.entity.TeamMember;
+import java.time.LocalDateTime;
 import com.teammate.backend.task.repository.TaskRepository;
 import com.teammate.backend.team.entity.Team;
 import com.teammate.backend.team.repository.TeamMemberRepository;
@@ -22,17 +26,20 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskAssignmentRepository assignmentRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
     private final UserRepository userRepository;
 
     public TaskService(
             TaskRepository taskRepository,
+            TaskAssignmentRepository assignmentRepository,
             TeamRepository teamRepository,
             TeamMemberRepository teamMemberRepository,
             UserRepository userRepository
     ) {
         this.taskRepository = taskRepository;
+        this.assignmentRepository = assignmentRepository;
         this.teamRepository = teamRepository;
         this.teamMemberRepository = teamMemberRepository;
         this.userRepository = userRepository;
@@ -67,9 +74,11 @@ public class TaskService {
 
         Task task = new Task();
         task.setTeam(team);
+        task.setCreatedBy(requester);
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
+        task.setPriority(request.getPriority());
 
         // 기본 상태는 Task 엔티티의 BACKLOG 사용
 
@@ -160,6 +169,8 @@ public class TaskService {
             );
         }
 
+        requireTaskEditor(teamId, requester, task);
+
         // 상태값 검증
         if (request.getStatus() == null) {
             throw new IllegalArgumentException(
@@ -207,10 +218,19 @@ public class TaskService {
             );
         }
 
+        requireTaskEditor(teamId, requester, task);
+
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
 
+        // 우선순위가 전달된 경우에만 변경 (기존 요청과 호환)
+        if (request.getPriority() != null) {
+            task.setPriority(request.getPriority());
+        }
+
+        // OWNER 또는 업무 생성자만 이 지점에 도달합니다.
+        // 생성자 정보가 없는 기존 업무는 OWNER만 수정할 수 있습니다.
         if (request.getAssigneeId() != null) {
             User assignee = userRepository.findById(request.getAssigneeId())
                     .orElseThrow(() ->
@@ -231,6 +251,11 @@ public class TaskService {
             task.setAssignee(assignee);
         } else {
             task.setAssignee(null);
+        }
+
+        // OWNER가 담당자를 직접 지정한 경우 기존 대기 신청을 종료합니다.
+        if (task.getAssignee() != null) {
+            cancelPendingAssignments(taskId);
         }
 
         return new TaskResponse(task);
@@ -269,6 +294,10 @@ public class TaskService {
             );
         }
 
+        requireTaskEditor(teamId, requester, task);
+
+        // 신청 내역이 업무를 참조하므로 먼저 삭제해 FK 충돌을 방지합니다.
+        assignmentRepository.deleteByTaskTaskId(taskId);
         taskRepository.delete(task);
     }
 
@@ -315,4 +344,28 @@ public class TaskService {
                 progress
         );
     }
+
+    private void requireTaskEditor(Long teamId, User requester, Task task) {
+        boolean creator = task.getCreatedBy() != null
+                && requester.getUserId().equals(task.getCreatedBy().getUserId());
+        if (!isOwner(teamId, requester.getUserId()) && !creator) {
+            throw new IllegalArgumentException(
+                    "업무 수정 및 삭제는 팀 OWNER 또는 해당 업무 생성자만 가능합니다.");
+        }
+    }
+
+    private boolean isOwner(Long teamId, Long userId) {
+        return teamMemberRepository.existsByTeamTeamIdAndUserUserIdAndRole(
+                teamId, userId, TeamMember.TeamRole.OWNER);
+    }
+
+    private void cancelPendingAssignments(Long taskId) {
+        LocalDateTime now = LocalDateTime.now();
+        for (TaskAssignment assignment : assignmentRepository.findByTaskTaskIdAndStatus(
+                taskId, TaskAssignment.Status.PENDING)) {
+            assignment.setStatus(TaskAssignment.Status.CANCELLED);
+            assignment.setReviewedAt(now);
+        }
+    }
+
 }

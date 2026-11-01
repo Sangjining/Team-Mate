@@ -1,5 +1,6 @@
 package com.teammate.backend.task.dto;
 
+import com.teammate.backend.task.entity.Task.Priority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +19,9 @@ public class CreateTaskRequest {
 
     private LocalDateTime dueDate;
 
+    // 생략하거나 null을 전달하면 보통 우선순위로 처리
+    private Priority priority = Priority.MEDIUM;
+
     public String getTitle() {
         return title;
     }
@@ -32,5 +36,9 @@ public class CreateTaskRequest {
 
     public LocalDateTime getDueDate() {
         return dueDate;
+    }
+
+    public Priority getPriority() {
+        return priority == null ? Priority.MEDIUM : priority;
     }
 }

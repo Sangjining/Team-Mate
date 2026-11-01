@@ -236,3 +236,22 @@
     background-color 0.2s ease,
     border-color 0.2s ease;
 }
+/* 업무 우선순위 배지 */
+.taskCardHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.taskCardHeading h4 { margin: 0; flex: 1; min-width: 0; }
+.priorityBadge {
+  flex-shrink: 0;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.priorityHIGH { background: #fee2e2; color: #991b1b; }
+.priorityMEDIUM { background: #fef3c7; color: #92400e; }
+.priorityLOW { background: #dcfce7; color: #166534; }

@@ -12,11 +12,13 @@ const KANBAN_COLUMNS = [
   { id: 'DONE', title: '완료', color: '#22c55e' },
 ];
 
+const PRIORITY_LABELS = { HIGH: '높음', MEDIUM: '보통', LOW: '낮음' };
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-async function taskRequest(teamId, method, path = '', body) {
+async function apiRequest(url, method = 'GET', body) {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('로그인이 필요합니다.');
-  const response = await fetch(`${API_BASE_URL}/api/teams/${teamId}/tasks${path}`, {
+  const response = await fetch(`${API_BASE_URL}${url}`, {
     method,
     headers: { Authorization: `Bearer ${token}`, ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}) },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
@@ -27,10 +29,13 @@ async function taskRequest(teamId, method, path = '', body) {
   if (!response.ok) throw new Error(data?.message || data?.error || `요청에 실패했습니다. (HTTP ${response.status})`);
   return data;
 }
+const taskRequest = (teamId, method, path = '', body) =>
+  apiRequest(`/api/teams/${teamId}/tasks${path}`, method, body);
 const toRequest = (form) => ({
   title: form.title.trim(),
   description: form.description?.trim() || '',
   assigneeId: form.assigneeId ? Number(form.assigneeId) : null,
+  priority: form.priority || 'MEDIUM',
   dueDate: form.dueDate ? `${form.dueDate.split('T')[0]}T23:59:00` : null,
 });
 
@@ -47,6 +52,51 @@ function KanbanBoard({ teamId }) {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [members, setMembers] = useState([]);
+    const [isOwner, setIsOwner] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState(null);
+    const [applyingTaskId, setApplyingTaskId] = useState(null);
+    const [pendingAssignments, setPendingAssignments] = useState([]);
+
+    const refreshTasks = async () => {
+      const data = await taskRequest(teamId, 'GET');
+      setTasks(Array.isArray(data) ? data : []);
+    };
+
+    const refreshPending = async () => {
+      const data = await taskRequest(teamId, 'GET', '/assignments/pending');
+      setPendingAssignments(Array.isArray(data) ? data : []);
+    };
+
+    useEffect(() => {
+      let active = true;
+      async function loadMembers() {
+        try {
+          const [memberData, me] = await Promise.all([
+            apiRequest(`/api/teams/${teamId}/members`),
+            apiRequest('/api/users/me'),
+          ]);
+          if (!active) return;
+          const list = Array.isArray(memberData) ? memberData : [];
+          setMembers(list);
+          setCurrentUserId(me.userId);
+          const owner = list.some((member) =>
+            String(member.userId ?? member.user?.userId) === String(me.userId) && member.role === 'OWNER'
+          );
+          setIsOwner(owner);
+          if (owner) {
+            const pending = await taskRequest(teamId, 'GET', '/assignments/pending');
+            if (active) setPendingAssignments(Array.isArray(pending) ? pending : []);
+          } else {
+            setPendingAssignments([]);
+          }
+        } catch (err) {
+          if (active) setError(err.message);
+        }
+      }
+      loadMembers();
+      return () => { active = false; };
+    }, [teamId]);
     useEffect(() => {
       let active = true;
       setLoading(true);
@@ -66,8 +116,34 @@ function KanbanBoard({ teamId }) {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
 
+    const canManageTask = (task) => Boolean(task && (
+      isOwner || (currentUserId != null && task.createdById != null &&
+        String(task.createdById) === String(currentUserId))
+    ));
+
+    const handleOpenTask = async (task) => {
+      if (canManageTask(task) || task.assigneeId != null) {
+        setSelectedTaskId(task.taskId);
+        return;
+      }
+      // OWNER/생성자가 아닌 팀원이 미배정 카드를 클릭했을 때만 신청 여부를 묻습니다.
+      if (!window.confirm(`'${task.title}' 업무를 담당하시겠습니까?`)) return;
+      if (applyingTaskId != null) return;
+      setApplyingTaskId(task.taskId);
+      try {
+        await taskRequest(teamId, 'POST', `/${task.taskId}/assignments`);
+        setError('담당 신청이 접수되었습니다. OWNER의 승인을 기다려주세요.');
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setApplyingTaskId(null);
+      }
+    };
+
     // 드래그 시작
     const handleDragStart = (event, taskId) => {
+        const task = tasks.find((item) => item.taskId === taskId);
+        if (!canManageTask(task)) { event.preventDefault(); return; }
         setDraggedTaskId(taskId);
 
         event.dataTransfer.effectAllowed = 'move';
@@ -92,7 +168,7 @@ function KanbanBoard({ teamId }) {
       setDraggedTaskId(null);
       setDragOverColumn(null);
       const task = tasks.find((item) => item.taskId === taskId);
-      if (!task || task.status === columnId) return;
+      if (!task || task.status === columnId || !canManageTask(task)) return;
       try {
         const updated = await taskRequest(teamId, 'PATCH', `/${taskId}/status`, { status: columnId });
         setTasks((prev) => prev.map((item) => item.taskId === taskId ? updated : item));
@@ -108,7 +184,20 @@ function KanbanBoard({ teamId }) {
 
     const handleCreateTask = async (form) => {
       const created = await taskRequest(teamId, 'POST', '', toRequest(form));
-      setTasks((prev) => [...prev, created]);
+      // 생성 API는 status를 받지 않으므로, 선택한 상태를 별도 API로 반영합니다.
+      const selectedStatus = form.status || 'BACKLOG';
+      let finalTask = created;
+      if (selectedStatus !== created.status) {
+        try {
+          finalTask = await taskRequest(teamId, 'PATCH', `/${created.taskId}/status`, { status: selectedStatus });
+        } catch (err) {
+          // 생성은 이미 완료되었으므로, 재시도 시 중복 생성되지 않도록 목록을 갱신합니다.
+          setTasks((prev) => [...prev, created]);
+          setIsCreateModalOpen(false);
+          throw new Error(`업무는 생성됐지만 진행 상태 변경에 실패했습니다: ${err.message}`);
+        }
+      }
+      setTasks((prev) => [...prev, finalTask]);
       setIsCreateModalOpen(false);
       setError('');
     };
@@ -121,6 +210,18 @@ function KanbanBoard({ teamId }) {
         : updated;
       setTasks((prev) => prev.map((item) => item.taskId === result.taskId ? result : item));
       setSelectedTaskId(null);
+      setError('');
+      if (isOwner) await refreshPending();
+    };
+
+    const handleApplyAssignment = async (taskId) => {
+      await taskRequest(teamId, 'POST', `/${taskId}/assignments`);
+      setError('담당 신청이 접수되었습니다. OWNER의 승인을 기다려주세요.');
+    };
+
+    const handleReviewAssignment = async (assignmentId, action) => {
+      await taskRequest(teamId, 'PATCH', `/assignments/${assignmentId}/${action}`);
+      await Promise.all([refreshTasks(), refreshPending()]);
       setError('');
     };
 
@@ -215,16 +316,16 @@ function KanbanBoard({ teamId }) {
                                                 ? styles.draggingCard
                                                 : ''
                                                 }`}
-                                            draggable
+                                            draggable={canManageTask(task)}
                                             role="button"
                                             tabIndex={0}
                                             aria-label={`${task.title} 업무 상세 보기`}
                                             style={{ cursor: 'pointer' }}
-                                            onClick={() => setSelectedTaskId(task.taskId)}
+                                            onClick={() => handleOpenTask(task)}
                                             onKeyDown={(event) => {
                                                 if (event.key === 'Enter' || event.key === ' ') {
                                                     event.preventDefault();
-                                                    setSelectedTaskId(task.taskId);
+                                                    handleOpenTask(task);
                                                 }
                                             }}
                                             onDragStart={(event) =>
@@ -281,6 +382,12 @@ function KanbanBoard({ teamId }) {
                     onClose={() => setSelectedTaskId(null)}
                     onSave={handleUpdateTask}
                     onDelete={handleDeleteTask}
+                    members={members}
+                    isOwner={canManageTask(selectedTask)}
+                    pendingAssignments={[]}
+                    onApplyAssignment={undefined}
+                    onApproveAssignment={undefined}
+                    onRejectAssignment={undefined}
                 />
             )}
 
@@ -289,6 +396,7 @@ function KanbanBoard({ teamId }) {
                 <CreateTaskModal
                     onClose={() => setIsCreateModalOpen(false)}
                     onCreate={handleCreateTask}
+                    members={members}
                 />
             )}
 

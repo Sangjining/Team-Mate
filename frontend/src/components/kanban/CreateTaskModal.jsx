@@ -10,13 +10,20 @@ const STATUS_OPTIONS = [
   { value: 'DONE', label: '완료' },
 ];
 
-function CreateTaskModal({ onClose, onCreate }) {
+const PRIORITY_OPTIONS = [
+  { value: 'HIGH', label: '높음' },
+  { value: 'MEDIUM', label: '보통' },
+  { value: 'LOW', label: '낮음' },
+];
+
+function CreateTaskModal({ onClose, onCreate, members = [] }) {
   const [form, setForm] = useState({
     title: '',
     description: '',
     assigneeId: '',
     dueDate: '',
     status: 'BACKLOG',
+    priority: 'MEDIUM',
   });
 
   const handleChange = (event) => {
@@ -44,7 +51,8 @@ function CreateTaskModal({ onClose, onCreate }) {
       await onCreate({
       title: form.title.trim(),
       description: form.description.trim(),
-      assigneeId: form.assigneeId,
+      assigneeId: form.assigneeId || null,
+      priority: form.priority,
       dueDate: form.dueDate,
       status: form.status,
     });
@@ -112,14 +120,33 @@ function CreateTaskModal({ onClose, onCreate }) {
 
           <div className={styles.field}>
             <label htmlFor="task-assignee">담당자</label>
-
-            <input
-              id="task-assignee" type="number" min="1"
+            <select
+              id="task-assignee"
               name="assigneeId"
               value={form.assigneeId}
               onChange={handleChange}
-              placeholder="팀원 사용자 ID (선택)"
-            />
+            >
+              <option value="">담당자 미지정</option>
+              {members.map((member) => (
+                <option key={member.userId} value={member.userId}>
+                  {member.name || member.loginId || `사용자 ${member.userId}`} ({member.role})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="task-priority">우선순위</label>
+            <select
+              id="task-priority"
+              name="priority"
+              value={form.priority}
+              onChange={handleChange}
+            >
+              {PRIORITY_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
           </div>
 
           <div className={styles.field}>
